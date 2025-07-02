@@ -1,20 +1,33 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.*;
-import com.example.demo.service.OrderService;
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
-import org.springframework.web.bind.annotation.*;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
+import com.example.demo.dto.OrderCreateDTO;
+import com.example.demo.dto.OrderDTO;
+import com.example.demo.dto.OrderUpdateStatusDTO;
+import com.example.demo.service.OrderService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/orders")
 @RequiredArgsConstructor
 public class OrderController {
-	private final OrderService orderService;
+	@Autowired
+	OrderService orderService;
 
 	@PostMapping
 	public ResponseEntity<OrderDTO> create(@Valid @RequestBody OrderCreateDTO dto) {

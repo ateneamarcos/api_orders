@@ -1,19 +1,24 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.DriverDTO;
-import com.example.demo.entity.Driver;
-import com.example.demo.dto.mapper.DriverMapper;
-import com.example.demo.repository.DriverRepository;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.example.demo.dto.DriverDTO;
+import com.example.demo.dto.mapper.DriverMapper;
+import com.example.demo.entity.Driver;
+import com.example.demo.repository.DriverRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class DriverService {
-	private final DriverRepository driverRepo;
-	private final DriverMapper mapper;
+	@Autowired
+	DriverRepository driverRepo;
+	@Autowired
+	DriverMapper mapper;
 
 	public DriverDTO createDriver(DriverDTO dto) {
 		Driver driver = mapper.toEntity(dto);

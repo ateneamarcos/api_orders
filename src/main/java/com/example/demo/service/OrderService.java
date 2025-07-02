@@ -1,31 +1,54 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.*;
-import com.example.demo.entity.*;
-import com.example.demo.exception.*;
-import com.example.demo.repository.*;
-import com.example.demo.dto.mapper.OrderMapper;
-import lombok.RequiredArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
+import com.example.demo.dto.OrderCreateDTO;
+import com.example.demo.dto.OrderDTO;
+import com.example.demo.dto.mapper.OrderMapper;
+import com.example.demo.entity.Driver;
+import com.example.demo.entity.Order;
+import com.example.demo.entity.OrderAttachment;
+import com.example.demo.exception.BusinessException;
+import com.example.demo.exception.InvalidOrderStateException;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.DriverRepository;
+import com.example.demo.repository.OrderAttachmentRepository;
+import com.example.demo.repository.OrderRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
 
-	private final OrderRepository orderRepo;
-	private final DriverRepository driverRepo;
-	private final OrderAttachmentRepository attachmentRepo;
-	private final OrderMapper orderMapper;
+	@Autowired
+	OrderRepository orderRepo;
+	@Autowired
+	DriverRepository driverRepo;
+	@Autowired
+	OrderAttachmentRepository attachmentRepo;
+	@Autowired
+	OrderMapper orderMapper;
 
+//	public OrderDTO createOrder(OrderCreateDTO dto) {
+//		Order order = Order.builder().origin(dto.getOrigin()).destination(dto.getDestination())
+//				.status(Order.Status.CREATED).createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).build();
+//		return orderMapper.toDto(orderRepo.save(order));
+//	}
+	
 	public OrderDTO createOrder(OrderCreateDTO dto) {
-		Order order = Order.builder().origin(dto.getOrigin()).destination(dto.getDestination())
-				.status(Order.Status.CREATED).createdAt(LocalDateTime.now()).updatedAt(LocalDateTime.now()).build();
-		return orderMapper.toDto(orderRepo.save(order));
+	    Order order = new Order();
+	    order.setOrigin(dto.getOrigin());
+	    order.setDestination(dto.getDestination());
+	    order.setStatus(Order.Status.CREATED);
+	    order.setCreatedAt(LocalDateTime.now());
+	    order.setUpdatedAt(LocalDateTime.now());
+	    return orderMapper.toDto(orderRepo.save(order));
 	}
 
 	public OrderDTO updateStatus(UUID orderId, Order.Status newStatus) {
@@ -64,14 +87,30 @@ public class OrderService {
 		return orderMapper.toDto(orderRepo.save(order));
 	}
 
+//	public void addAttachment(UUID orderId, MultipartFile file) throws Exception {
+//		Order order = orderRepo.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+//		String type = file.getContentType();
+//		if (!(type.equals("application/pdf") || type.equals("image/png") || type.equals("image/jpeg")))
+//			throw new BusinessException("Invalid file type");
+//
+//		OrderAttachment attach = OrderAttachment.builder().order(order).fileName(file.getOriginalFilename())
+//				.fileType(type).data(file.getBytes()).build();
+//		attachmentRepo.save(attach);
+//	}
+	
 	public void addAttachment(UUID orderId, MultipartFile file) throws Exception {
-		Order order = orderRepo.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("Order not found"));
-		String type = file.getContentType();
-		if (!(type.equals("application/pdf") || type.equals("image/png") || type.equals("image/jpeg")))
-			throw new BusinessException("Invalid file type");
+	    Order order = orderRepo.findById(orderId)
+	            .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
+	    String type = file.getContentType();
+	    if (!(type.equals("application/pdf") || type.equals("image/png") || type.equals("image/jpeg")))
+	        throw new BusinessException("Invalid file type");
 
-		OrderAttachment attach = OrderAttachment.builder().order(order).fileName(file.getOriginalFilename())
-				.fileType(type).data(file.getBytes()).build();
-		attachmentRepo.save(attach);
+	    OrderAttachment attach = new OrderAttachment();
+	    attach.setOrder(order);
+	    attach.setFileName(file.getOriginalFilename());
+	    attach.setFileType(type);
+	    attach.setData(file.getBytes());
+
+	    attachmentRepo.save(attach);
 	}
 }

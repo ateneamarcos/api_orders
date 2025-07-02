@@ -8,4 +8,14 @@ import lombok.Data;
 public class OrderUpdateStatusDTO {
 	@NotNull
 	private Status status;
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+	
+	
 }
