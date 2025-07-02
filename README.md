@@ -10,7 +10,7 @@ Ejecuta el contenedor:
 docker run --name demo-container -d -p 8080:8080 demo-app:latest
 
 
-📌 Características principales
+Características principales
 API REST para gestión de órdenes y conductores
 
 Asignación de conductores a órdenes (validando que estén activos y que la orden esté en estado CREATED)
@@ -33,7 +33,7 @@ Logging estructurado
 
 
 
-🧪 Ejecutar pruebas unitarias
+Ejecutar pruebas unitarias
 
 
 
@@ -41,19 +41,19 @@ Con Maven:
 
 ./mvnw test
 
-📖 Documentación de la API
+Documentación de la API
 
 
 Una vez la app esté corriendo, consulta la documentación Swagger:
 
 http://localhost:8080/swagger-ui.html
 
-✏️ Autor
+Autor
 Atenea Nathaly Marcos Lopez
 
-## 📌 Endpoints de la API
+## Endpoints de la API
 
-### 🚚 Ordenes
+### Ordenes
 
 | Método | Endpoint | Descripción |
 |-------|----------|-------------|
@@ -65,7 +65,7 @@ Atenea Nathaly Marcos Lopez
 
 ---
 
-### 🧑‍✈️ Conductores
+### Conductores
 
 | Método | Endpoint | Descripción |
 |-------|----------|-------------|
